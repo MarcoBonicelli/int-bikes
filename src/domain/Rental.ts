@@ -20,7 +20,7 @@ export class Rental {
   private _bikeType: BikeType = "urban";
   private _hours: number = 1;
   private _pricePerHour: number = 0;
-  private _lateHours: number = 0;
+  private _hoursUsed: number = 0;
 
   constructor(data: RentalData) {
     this.customer = data.customer;
@@ -28,6 +28,7 @@ export class Rental {
     this.bikeType = data.bikeType;
     this.hours = data.hours;
     this.pricePerHour = data.pricePerHour;
+
   }
 
   get customer(): string {
@@ -87,12 +88,19 @@ export class Rental {
     this._pricePerHour = value;
   }
 
-  get lateHours(): number {
-    return this._lateHours;
+  get hoursUsed(): number {
+    return this._hoursUsed;
   }
 
-  set lateHours(_value: number) {
-    // TODO: validar y guardar las horas de atraso
+  set hoursUsed(value: number) {
+    if (!Number.isInteger(value) || value < 0) {
+      throw new Error("Las horas usadas deben ser un entero mayor o igual a 0.");
+    }
+    this._hoursUsed = value;
+  }
+
+  get lateHours(): number {
+    return Math.max(0, this.hoursUsed - this.hours);
   }
 
   cost(): number {
@@ -100,6 +108,10 @@ export class Rental {
   }
 
   toString(): string {
-    return `${this.bikeCode} (${BIKE_TYPE_LABELS[this.bikeType]}) - ${this.customer} - ${this.hours} h - $${this.cost()}`;
+    const respuesta = `${this.bikeCode} (${BIKE_TYPE_LABELS[this.bikeType]}) - ${this.customer} - ${this.hours} h - $${this.cost()}`;
+    if (this.lateHours > 0) {
+      return `${respuesta} - Atraso: ${this.lateHours} h`;
+    }
+    return respuesta;
   }
 }

@@ -109,6 +109,19 @@
                 value="0"
                 readonly
               />
+              
+            </div>
+            <div class="stat">
+              <label class="form-label" for="inp-total-rentals"
+                >Recargos por atraso</label
+              >
+              <input
+                class="form-control-plaintext"
+                id="inp-total-rentals"
+                type="text"
+                value="0"
+                readonly
+              />
             </div>
           </div>
         </section>
@@ -176,6 +189,28 @@
                 type="number"
                 min="1"
                 max="24"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label" for="inp-hours-late"
+                >Horas de atraso</label
+              >
+              <button
+                class="hint"
+                type="button"
+                data-bs-toggle="tooltip"
+                title="Número entero mayor o igual a 0."
+              >
+                ?
+              </button>
+              <input
+                class="form-control"
+                id="inp-hours-late"
+                type="number"
+                min="0"
+                step="1"
+                value="0"
               />
             </div>
             <div class="col-md-6">

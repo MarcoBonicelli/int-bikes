@@ -82,7 +82,10 @@ function createDeleteButton(rental: Rental): HTMLButtonElement {
   button.textContent = "Eliminar";
   button.setAttribute("aria-label", `Eliminar ${rental.bikeCode}`);
   button.addEventListener("click", () => {
-    // TODO: eliminar este alquiler y actualizar los paneles
+    rentalList.remove(rental.bikeCode);
+    updateList();
+    updateListByType();
+    updateTotals();
   });
   return button;
 }
@@ -97,6 +100,10 @@ function createCard(rental: Rental): HTMLDivElement {
   const title = document.createElement("h5");
   title.className = "card-title";
   title.textContent = rental.bikeCode;
+  const badge = document.createElement("span");
+  badge.className = "badge text-bg-secondary";
+  badge.textContent = BIKE_TYPE_LABELS[rental.bikeType];
+  title.append(badge);
   const lines = [
     `Tipo: ${BIKE_TYPE_LABELS[rental.bikeType]}`,
     `Cliente: ${rental.customer}`,
@@ -142,7 +149,7 @@ function updateTotals(): void {
 function loadMockData(): void {
   for (const data of mockRentals as (RentalData & { lateHours?: number })[]) {
     const rental = new Rental(data);
-    rental.lateHours = data.lateHours ?? 0;
+    rental.hoursUsed = rental.hours + (data.lateHours ?? 0);
     rentalList.add(rental);
   }
 }

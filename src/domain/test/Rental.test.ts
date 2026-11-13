@@ -74,4 +74,48 @@ describe("Rental", () => {
   test("show the rental as text", () => {
     expect(rental.toString()).toBe("B-123 (Urbana) - Juan Gómez - 3 h - $300");
   });
+
+  test("omit late hours from text when used within the rental time", () => {
+    rental.hoursUsed = 2;
+
+    expect(rental.toString()).toBe("B-123 (Urbana) - Juan Gómez - 3 h - $300");
+  });
+
+  test("show late hours in text when overdue", () => {
+    rental.hoursUsed = 5;
+
+    expect(rental.toString()).toBe(
+      "B-123 (Urbana) - Juan Gómez - 3 h - $300 - Atraso: 2 h",
+    );
+  });
+
+  test("bicycle hours used", () => {
+    rental.hoursUsed = 5;
+
+    expect(rental.hoursUsed).toBe(5);
+  });
+
+  test("calculate late hours", () => {
+    rental.hoursUsed = 5; // Reservó 3 horas
+
+    expect(rental.lateHours).toBe(2);
+  });
+
+  test("return zero late hours when used within the rental time", () => {
+    rental.hoursUsed = 2;
+
+    expect(rental.lateHours).toBe(0);
+  });
+
+  test("reject negative hours used", () => {
+    expect(() => (rental.hoursUsed = -1)).toThrow(
+      "Las horas usadas deben ser un entero mayor o igual a 0.",
+    );
+  });
+
+  test("reject fractional hours used", () => {
+    expect(() => (rental.hoursUsed = 1.5)).toThrow(
+      "Las horas usadas deben ser un entero mayor o igual a 0.",
+    );
+  });
 });
